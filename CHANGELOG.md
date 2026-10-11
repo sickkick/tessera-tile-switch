@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.3 - 2026-10-11
+- The switch on a one-cell tile is a short pill, so the name keeps its room.
+
 ## 0.1.2 - 2026-10-11
 - Offered on a 4 MB screen that is already at Tessera's flash limit. The tile only draws with what the screen already has.
 

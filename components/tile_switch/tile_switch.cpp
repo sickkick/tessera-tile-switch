@@ -73,11 +73,18 @@ class SwitchTile : public tessera::Tile {
  private:
   void place() {
     const int pad = ui::px(4);
-    const int gap = ui::px(6);
+    const int gap = ui::px(4);
     const int icon_h = std::max(1, ui::line_height(Font::ICON));
-    track_h_ = std::max(ui::mm(7), icon_h);
-    track_w_ = track_h_ * 2;
-    if (track_w_ > width_ / 3) track_w_ = std::max(track_h_ + ui::px(8), width_ / 3);
+    // A short pill, about the editor's own switch (30 by 17). The old size was 7 mm tall and,
+    // once a one-cell tile capped the width, became a circle that ate the name.
+    track_h_ = ui::px(18);
+    track_w_ = track_h_ * 9 / 5;
+    const int cap_h = std::max(ui::px(14), height_ * 2 / 5);
+    if (track_h_ > cap_h) track_h_ = cap_h;
+    const int cap_w = std::max(track_h_ + ui::px(6), width_ * 2 / 5);
+    if (track_w_ > cap_w) track_w_ = cap_w;
+    if (track_w_ < track_h_ + track_h_ / 2) track_h_ = std::max(ui::px(12), track_w_ * 5 / 9);
+    track_w_ = std::min(track_w_, track_h_ * 2);
     const int row_h = std::max(icon_h, track_h_);
     const int top = std::max(0, (height_ - row_h) / 2);
     lv_obj_set_pos(icon_, pad, top + (row_h - icon_h) / 2);
@@ -85,8 +92,8 @@ class SwitchTile : public tessera::Tile {
     const int switch_x = std::max(pad, width_ - pad - track_w_);
     lv_obj_set_pos(track_, switch_x, top + (row_h - track_h_) / 2);
     lv_obj_set_size(track_, track_w_, track_h_);
-    knob_size_ = std::max(4, track_h_ - ui::px(4));
-    knob_pad_ = std::max(0, (track_h_ - knob_size_) / 2);
+    knob_pad_ = std::max(1, ui::px(2));
+    knob_size_ = std::max(4, track_h_ - 2 * knob_pad_);
     lv_obj_set_size(knob_, knob_size_, knob_size_);
     place_knob();
 
