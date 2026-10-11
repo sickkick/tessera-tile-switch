@@ -8,8 +8,30 @@
   },
   "app": {
     "name": "Switch on the tile",
-    "summary": "A light, switch or fan as a row, with the on/off switch on the right.",
+    "summary": "A light, switch or fan as a row, with the on/off switch along the bottom.",
     "tile_name": "Switch",
-    "tile_example": "Ceiling fan light, on"
+    "tile_example": "Ceiling fan light, on",
+    "icon": "Icon",
+    "icon_hint": "The picture at the top left. Automatic follows the entity.",
+    "icon_auto": "Automatic",
+    "icon_light": "Light",
+    "icon_lights": "Lights",
+    "icon_ceiling_light": "Ceiling light",
+    "icon_ceiling_fan": "Ceiling fan",
+    "icon_fan": "Fan",
+    "icon_lamp": "Lamp",
+    "icon_floor_lamp": "Floor lamp",
+    "icon_desk_lamp": "Desk lamp",
+    "icon_chandelier": "Chandelier",
+    "icon_spotlight": "Spotlight",
+    "icon_strip": "Light strip",
+    "icon_outdoor": "Outdoor light",
+    "icon_switch": "Switch",
+    "icon_power": "Power",
+    "icon_plug": "Plug",
+    "icon_humidifier": "Humidifier",
+    "icon_purifier": "Air purifier",
+    "icon_automation": "Automation",
+    "icon_remote": "Remote"
   }
 }

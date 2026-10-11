@@ -1,6 +1,6 @@
-# A row for something that turns on and off, with the switch on the right of the tile.
+# A row for something that turns on and off, with the switch along the bottom of the tile.
 id: tile_switch
-version: 0.1.3
+version: 0.1.4
 api: "0.8"
 icon: toggle-switch
 maintainer: sickkick
@@ -31,3 +31,30 @@ tiles:
     domains: [light, switch, input_boolean, fan, automation, remote, humidifier]
     example: tile_example
     preview: { title: "{name}", value: "On" }
+    options:
+      - id: icon
+        kind: choice
+        label: icon
+        hint: icon_hint
+        default: auto
+        choices:
+          - { value: auto, label: icon_auto }
+          - { value: lightbulb, label: icon_light }
+          - { value: lightbulb-group, label: icon_lights }
+          - { value: ceiling-light, label: icon_ceiling_light }
+          - { value: ceiling-fan, label: icon_ceiling_fan }
+          - { value: fan, label: icon_fan }
+          - { value: lamp, label: icon_lamp }
+          - { value: floor-lamp, label: icon_floor_lamp }
+          - { value: desk-lamp, label: icon_desk_lamp }
+          - { value: chandelier, label: icon_chandelier }
+          - { value: spotlight-beam, label: icon_spotlight }
+          - { value: led-strip-variant, label: icon_strip }
+          - { value: outdoor-lamp, label: icon_outdoor }
+          - { value: toggle-switch, label: icon_switch }
+          - { value: power, label: icon_power }
+          - { value: power-plug, label: icon_plug }
+          - { value: air-humidifier, label: icon_humidifier }
+          - { value: air-purifier, label: icon_purifier }
+          - { value: script-text, label: icon_automation }
+          - { value: remote, label: icon_remote }

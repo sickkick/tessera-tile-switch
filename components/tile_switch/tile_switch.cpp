@@ -8,7 +8,7 @@ namespace esphome::tile_switch {
 using tessera::Font;
 namespace ui = tessera::ui;
 
-// Icon of Tessera's set for the entity's domain (tile_icon_names.h).
+// Icon of Tessera's set for the entity's domain, used when the tile's Icon option is Automatic.
 static uint32_t icon_of(const std::string &domain) {
   if (domain == "light") return 0xF0335;          // lightbulb
   if (domain == "fan") return 0xF0210;            // fan
@@ -18,7 +18,38 @@ static uint32_t icon_of(const std::string &domain) {
   return 0xF0521;                                 // toggle-switch
 }
 
-// A row: icon, name, On or Off, and the switch at the right. A tap toggles the entity.
+// The Icon option's choices, by Material Design Icons name. The same codepoints as Tessera's icon set.
+struct IconChoice { const char *name; uint32_t codepoint; };
+static constexpr IconChoice ICON_CHOICES[] = {
+  {"lightbulb", 0xF0335},
+  {"lightbulb-group", 0xF1253},
+  {"ceiling-light", 0xF0769},
+  {"ceiling-fan", 0xF1797},
+  {"fan", 0xF0210},
+  {"lamp", 0xF06B5},
+  {"floor-lamp", 0xF08DD},
+  {"desk-lamp", 0xF095F},
+  {"chandelier", 0xF1793},
+  {"spotlight-beam", 0xF04C9},
+  {"led-strip-variant", 0xF1051},
+  {"outdoor-lamp", 0xF1054},
+  {"toggle-switch", 0xF0521},
+  {"power", 0xF0425},
+  {"power-plug", 0xF06A5},
+  {"air-humidifier", 0xF1099},
+  {"air-purifier", 0xF0D44},
+  {"script-text", 0xF0BC2},
+  {"remote", 0xF0454},
+};
+
+static uint32_t icon_picked(const char *name, const std::string &domain) {
+  if (name && name[0] && std::strcmp(name, "auto") != 0)
+    for (const auto &choice : ICON_CHOICES)
+      if (std::strcmp(name, choice.name) == 0) return choice.codepoint;
+  return icon_of(domain);
+}
+
+// Icon, name and On or Off at the top, and the switch as a pill along the bottom. A tap toggles the entity.
 class SwitchTile : public tessera::Tile {
  public:
   explicit SwitchTile(const tessera::Plugin *plugin) : plugin_(plugin) {}
@@ -26,13 +57,14 @@ class SwitchTile : public tessera::Tile {
   void create(const tessera::TileContext &c) override {
     width_ = c.width;
     height_ = c.height;
+    columns_ = c.columns ? c.columns : 1;
     entity_ = c.entity ? c.entity : "";
     const auto dot = entity_.find('.');
     domain_ = dot == std::string::npos ? std::string() : entity_.substr(0, dot);
     chosen_name_ = c.name ? c.name : "";
 
     icon_ = ui::label(c.parent, Font::ICON, theme::OFF);
-    ui::set_text(icon_, ui::icon(icon_of(domain_)));
+    ui::set_text(icon_, ui::icon(icon_picked(c.options["icon"] | "auto", domain_)));
     name_ = ui::label(c.parent, Font::TITLE, theme::INK);
     state_ = ui::label(c.parent, Font::BODY, theme::MUTED);
     track_ = ui::block(c.parent, theme::PANEL_TOGGLE_OFF);
@@ -73,35 +105,40 @@ class SwitchTile : public tessera::Tile {
  private:
   void place() {
     const int pad = ui::px(4);
-    const int gap = ui::px(4);
+    const int gap = ui::px(3);
     const int icon_h = std::max(1, ui::line_height(Font::ICON));
-    // A short pill, about the editor's own switch (30 by 17). The old size was 7 mm tall and,
-    // once a one-cell tile capped the width, became a circle that ate the name.
-    track_h_ = ui::px(18);
-    track_w_ = track_h_ * 9 / 5;
-    const int cap_h = std::max(ui::px(14), height_ * 2 / 5);
-    if (track_h_ > cap_h) track_h_ = cap_h;
-    const int cap_w = std::max(track_h_ + ui::px(6), width_ * 2 / 5);
-    if (track_w_ > cap_w) track_w_ = cap_w;
-    if (track_w_ < track_h_ + track_h_ / 2) track_h_ = std::max(ui::px(12), track_w_ * 5 / 9);
-    track_w_ = std::min(track_w_, track_h_ * 2);
-    const int row_h = std::max(icon_h, track_h_);
-    const int top = std::max(0, (height_ - row_h) / 2);
-    lv_obj_set_pos(icon_, pad, top + (row_h - icon_h) / 2);
+    const int state_h = std::max(1, ui::line_height(Font::BODY));
 
+    // A short wide pill along the bottom, so the knob sits in the bottom right when the entity is on.
+    track_h_ = ui::px(16);
+    const int max_h = std::max(ui::px(12), height_ / 4);
+    if (track_h_ > max_h) track_h_ = max_h;
+    const int inner = std::max(track_h_ * 2, width_ - 2 * pad);
+    track_w_ = std::min(inner, std::max(track_h_ * 3, inner * 7 / 10));
     const int switch_x = std::max(pad, width_ - pad - track_w_);
-    lv_obj_set_pos(track_, switch_x, top + (row_h - track_h_) / 2);
+    const int switch_y = std::max(pad, height_ - pad - track_h_);
+    lv_obj_set_pos(track_, switch_x, switch_y);
     lv_obj_set_size(track_, track_w_, track_h_);
     knob_pad_ = std::max(1, ui::px(2));
     knob_size_ = std::max(4, track_h_ - 2 * knob_pad_);
     lv_obj_set_size(knob_, knob_size_, knob_size_);
     place_knob();
 
-    const int name_h = std::max(1, ui::line_height(Font::TITLE));
-    const int state_h = std::max(1, ui::line_height(Font::BODY));
+    // A compact screen keeps a one-cell name small. Two columns is the room Tessera uses for the larger name.
+    Font name_font = Font::TITLE;
+    if (columns_ >= 2 && !ui::large()) {
+      const int big = ui::line_height(Font::BODY_LARGE);
+      const int below = height_ - pad - track_h_ - ui::px(4);
+      if (big > 0 && big + state_h <= below) name_font = Font::BODY_LARGE;
+    }
+    ui::set_font(name_, name_font);
+    const int name_h = std::max(1, ui::line_height(name_font));
+
     const int text_x = pad + icon_h + gap;
-    const int text_w = std::max(1, switch_x - gap - text_x);
-    const int text_y = std::max(0, top + (row_h - name_h - state_h) / 2);
+    const int text_w = std::max(1, width_ - pad - text_x);
+    const int block = name_h + state_h;
+    const int text_y = pad;
+    lv_obj_set_pos(icon_, pad, text_y + std::max(0, (block - icon_h) / 2));
     lv_obj_set_pos(name_, text_x, text_y);
     lv_obj_set_size(name_, text_w, name_h);
     lv_obj_set_pos(state_, text_x, text_y + name_h);
@@ -128,7 +165,7 @@ class SwitchTile : public tessera::Tile {
   const tessera::Plugin *plugin_;
   std::string entity_, domain_, chosen_name_, reported_name_;
   bool on_ = false, known_ = false;
-  int width_ = 0, height_ = 0, track_w_ = 0, track_h_ = 0, knob_size_ = 0, knob_pad_ = 0;
+  int width_ = 0, height_ = 0, columns_ = 1, track_w_ = 0, track_h_ = 0, knob_size_ = 0, knob_pad_ = 0;
   lv_obj_t *icon_{}, *name_{}, *state_{}, *track_{}, *knob_{};
 };
 

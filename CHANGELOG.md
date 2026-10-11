@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4 - 2026-10-11
+- The switch sits along the bottom of the tile, with the knob in the bottom right while it is on.
+- A tile two columns wide uses the larger title. A one-cell tile keeps the small one.
+- The inspector has an Icon choice. Automatic follows the entity.
+
 ## 0.1.3 - 2026-10-11
 - The switch on a one-cell tile is a short pill, so the name keeps its room.
 
