@@ -1,6 +1,6 @@
 # A row for something that turns on and off, with the switch on the right of the tile.
 id: tile_switch
-version: 0.1.1
+version: 0.1.2
 api: "0.8"
 icon: toggle-switch
 maintainer: sickkick
@@ -10,7 +10,7 @@ topics: [home]
 requires:
   esphome: 2026.6.2
 boards: any
-flash_kb: 1
+flash_kb: 0
 
 permissions:
   home_assistant_actions:
