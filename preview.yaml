@@ -1,0 +1,18 @@
+# A light that is on, and a switch that is off, on every kind of screen.
+tiles:
+  - tile: toggle
+    name: Ceiling fan light
+    entity: light.ceiling_fan
+  - tile: toggle
+    entity: switch.porch
+    sizes: [1x1, 2x1]
+
+states:
+  light.ceiling_fan:
+    state: "on"
+    attributes:
+      friendly_name: Ceiling fan light
+  switch.porch:
+    state: "off"
+    attributes:
+      friendly_name: Porch

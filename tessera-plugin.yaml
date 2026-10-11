@@ -1,0 +1,33 @@
+# A row for something that turns on and off, with the switch on the right of the tile.
+id: tile_switch
+version: 0.1.0
+api: "0.8"
+icon: toggle-switch
+maintainer: sickkick
+license: MIT
+stage: beta
+topics: [home]
+requires:
+  esphome: 2026.6.2
+boards: any
+flash_kb: 8
+
+permissions:
+  home_assistant_actions:
+    - light.toggle
+    - switch.toggle
+    - input_boolean.toggle
+    - fan.toggle
+    - automation.toggle
+    - remote.toggle
+    - humidifier.toggle
+
+tiles:
+  - id: toggle
+    name: tile_name
+    icon: toggle-switch
+    sizes: { min: 1x1, max: 4x1 }
+    memory: 500
+    domains: [light, switch, input_boolean, fan, automation, remote, humidifier]
+    example: tile_example
+    preview: { title: "{name}", value: "On" }

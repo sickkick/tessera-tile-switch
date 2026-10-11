@@ -1,0 +1,15 @@
+{
+  "_meta": { "name": "English" },
+  "screen": {
+    "on": "On",
+    "off": "Off",
+    "unavailable": "Unavailable",
+    "choose": "Choose an entity"
+  },
+  "app": {
+    "name": "Switch on the tile",
+    "summary": "A light, switch or fan as a row, with the on/off switch on the right.",
+    "tile_name": "Switch",
+    "tile_example": "Ceiling fan light, on"
+  }
+}
