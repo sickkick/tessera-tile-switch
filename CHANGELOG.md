@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5 - 2026-10-11
+- The switch stays a short pill in the bottom right. It no longer stretches across the tile.
+- A tile can be two rows high. The name then wraps onto a second line.
+
 ## 0.1.4 - 2026-10-11
 - The switch sits along the bottom of the tile, with the knob in the bottom right while it is on.
 - A tile two columns wide uses the larger title. A one-cell tile keeps the small one.

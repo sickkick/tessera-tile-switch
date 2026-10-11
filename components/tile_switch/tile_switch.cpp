@@ -58,6 +58,7 @@ class SwitchTile : public tessera::Tile {
     width_ = c.width;
     height_ = c.height;
     columns_ = c.columns ? c.columns : 1;
+    rows_ = c.rows ? c.rows : 1;
     entity_ = c.entity ? c.entity : "";
     const auto dot = entity_.find('.');
     domain_ = dot == std::string::npos ? std::string() : entity_.substr(0, dot);
@@ -109,12 +110,13 @@ class SwitchTile : public tessera::Tile {
     const int icon_h = std::max(1, ui::line_height(Font::ICON));
     const int state_h = std::max(1, ui::line_height(Font::BODY));
 
-    // A short wide pill along the bottom, so the knob sits in the bottom right when the entity is on.
+    // A short pill in the bottom right. Its width stays put when the tile grows, so it does not become a bar.
     track_h_ = ui::px(16);
-    const int max_h = std::max(ui::px(12), height_ / 4);
+    const int max_h = std::max(ui::px(12), height_ / 5);
     if (track_h_ > max_h) track_h_ = max_h;
-    const int inner = std::max(track_h_ * 2, width_ - 2 * pad);
-    track_w_ = std::min(inner, std::max(track_h_ * 3, inner * 7 / 10));
+    track_w_ = track_h_ * 5 / 2;
+    const int widest = std::max(track_h_ * 2, (width_ - 2 * pad) / 2);
+    if (track_w_ > widest) track_w_ = widest;
     const int switch_x = std::max(pad, width_ - pad - track_w_);
     const int switch_y = std::max(pad, height_ - pad - track_h_);
     lv_obj_set_pos(track_, switch_x, switch_y);
@@ -133,15 +135,20 @@ class SwitchTile : public tessera::Tile {
     }
     ui::set_font(name_, name_font);
     const int name_h = std::max(1, ui::line_height(name_font));
+    // One row keeps a single line. Two rows gives the name a second line, when that still sits above the switch.
+    int name_lines = 1;
+    if (rows_ >= 2 && pad + name_h * 2 + state_h + gap <= switch_y) name_lines = 2;
 
     const int text_x = pad + icon_h + gap;
     const int text_w = std::max(1, width_ - pad - text_x);
-    const int block = name_h + state_h;
+    const int name_box = name_h * name_lines;
+    const int block = name_box + state_h;
     const int text_y = pad;
-    lv_obj_set_pos(icon_, pad, text_y + std::max(0, (block - icon_h) / 2));
+    lv_label_set_long_mode(name_, name_lines > 1 ? LV_LABEL_LONG_WRAP : LV_LABEL_LONG_DOT);
+    lv_obj_set_pos(icon_, pad, text_y + std::max(0, (name_lines > 1 ? name_h : block) - icon_h) / 2);
     lv_obj_set_pos(name_, text_x, text_y);
-    lv_obj_set_size(name_, text_w, name_h);
-    lv_obj_set_pos(state_, text_x, text_y + name_h);
+    lv_obj_set_size(name_, text_w, name_box);
+    lv_obj_set_pos(state_, text_x, text_y + name_box);
     lv_obj_set_size(state_, text_w, state_h);
   }
 
@@ -165,7 +172,7 @@ class SwitchTile : public tessera::Tile {
   const tessera::Plugin *plugin_;
   std::string entity_, domain_, chosen_name_, reported_name_;
   bool on_ = false, known_ = false;
-  int width_ = 0, height_ = 0, columns_ = 1, track_w_ = 0, track_h_ = 0, knob_size_ = 0, knob_pad_ = 0;
+  int width_ = 0, height_ = 0, columns_ = 1, rows_ = 1, track_w_ = 0, track_h_ = 0, knob_size_ = 0, knob_pad_ = 0;
   lv_obj_t *icon_{}, *name_{}, *state_{}, *track_{}, *knob_{};
 };
 

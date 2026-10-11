@@ -9,7 +9,7 @@ This is a tile of its own. It does not change Tessera's own light and switch til
 1. Add the plugin to a screen in Tessera. The screen builds once.
 2. In Layout, place **Switch** from the library's Plugins group.
 3. In the inspector, choose the entity. A light, switch, input boolean, fan, automation, remote or humidifier.
-4. Icon picks the picture at the top left. Automatic follows the entity. Drag the tile's edge to make it wider: two columns uses the larger title.
+4. Icon picks the picture at the top left. Automatic follows the entity. Drag an edge to change the size, up to four columns wide and two rows high. Two columns uses the larger title. Two rows lets the name wrap onto a second line. The switch stays a short pill in the bottom right.
 
 ## Good to know
 

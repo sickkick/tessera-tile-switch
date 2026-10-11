@@ -1,6 +1,6 @@
 # A row for something that turns on and off, with the switch along the bottom of the tile.
 id: tile_switch
-version: 0.1.4
+version: 0.1.5
 api: "0.8"
 icon: toggle-switch
 maintainer: sickkick
@@ -26,7 +26,7 @@ tiles:
   - id: toggle
     name: tile_name
     icon: toggle-switch
-    sizes: { min: 1x1, max: 4x1 }
+    sizes: { min: 1x1, max: 4x2 }
     memory: 500
     domains: [light, switch, input_boolean, fan, automation, remote, humidifier]
     example: tile_example
