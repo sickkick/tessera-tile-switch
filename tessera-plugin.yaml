@@ -1,6 +1,6 @@
 # A row for something that turns on and off, with the switch along the bottom of the tile.
 id: tile_switch
-version: 0.1.5
+version: 0.1.6
 api: "0.8"
 icon: toggle-switch
 maintainer: sickkick

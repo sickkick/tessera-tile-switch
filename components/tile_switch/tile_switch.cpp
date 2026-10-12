@@ -110,12 +110,12 @@ class SwitchTile : public tessera::Tile {
     const int icon_h = std::max(1, ui::line_height(Font::ICON));
     const int state_h = std::max(1, ui::line_height(Font::BODY));
 
-    // A short pill in the bottom right. Its width stays put when the tile grows, so it does not become a bar.
-    track_h_ = ui::px(16);
-    const int max_h = std::max(ui::px(12), height_ / 5);
-    if (track_h_ > max_h) track_h_ = max_h;
-    track_w_ = track_h_ * 5 / 2;
-    const int widest = std::max(track_h_ * 2, (width_ - 2 * pad) / 2);
+    // A pill in the bottom right, a step larger than the small one. Its width stays put when the tile grows.
+    track_h_ = ui::px(22);
+    if (height_ > 0 && track_h_ > height_ / 3) track_h_ = std::max(ui::px(16), height_ / 3);
+    track_w_ = ui::px(48);
+    if (track_w_ < track_h_ * 2) track_w_ = track_h_ * 2;
+    const int widest = std::max(track_h_ * 2, width_ - 2 * pad);
     if (track_w_ > widest) track_w_ = widest;
     const int switch_x = std::max(pad, width_ - pad - track_w_);
     const int switch_y = std::max(pad, height_ - pad - track_h_);

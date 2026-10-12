@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.6 - 2026-10-12
+- The switch in the bottom right is a little larger.
+
 ## 0.1.5 - 2026-10-11
 - The switch stays a short pill in the bottom right. It no longer stretches across the tile.
 - A tile can be two rows high. The name then wraps onto a second line.
